@@ -1,0 +1,31 @@
+{
+  
+  "name": "avioverlay",
+  
+  "version": "1.0.0",
+  
+  "type": "module",
+  
+  "dependencies": {
+  
+    
+  "@types/prompt-sync": "^4.2.3",
+  
+    
+  "prompt-sync": "^4.2.0",
+  
+    
+  "vrchat": "^2.21.7"
+  
+  },
+  
+  "devDependencies": {
+  
+    
+  "@types/node": "^25.9.1",
+  
+    
+  "typed-emitter": "^2.1.0"
+  
+  }
+}
