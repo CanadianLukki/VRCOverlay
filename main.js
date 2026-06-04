@@ -21,6 +21,7 @@ const API_CONFIG_RESPONSE = API_CONFIG.response;
 console.log(`Received awnser from the VRChat API: ${API_CONFIG_RESPONSE.status} - ${API_CONFIG_RESPONSE.statusText}`);
 await setTimeout(2000);
 const API_USER = await vrchat.getCurrentUser();
+console.log(API_USER.data);
 if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
     console.log("Needs authentification!");
     if (API_USER.data.requiresTwoFactorAuth?.includes('emailOtp')) {
