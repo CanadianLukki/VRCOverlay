@@ -1,6 +1,7 @@
 import { VRChat } from "vrchat";
 import { setTimeout } from 'node:timers/promises';
-const prompt = require('prompt-sync')();
+import promptSync from 'prompt-sync';
+const prompt = promptSync();
 const vrchat = new VRChat({
     application: {
         name: "AviOverlay",
@@ -9,21 +10,27 @@ const vrchat = new VRChat({
     },
     authentication: {
         credentials: {
-            username: "contactme@lukkiserver.com",
-            password: "E3eVz8fUU6X6XRBcd"
+            username: "###############",
+            password: "########"
         },
     },
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response;
-const API_USER = await vrchat.getCurrentUser();
 // Program execution
 console.log(`Received awnser from the VRChat API: ${API_CONFIG_RESPONSE.status} - ${API_CONFIG_RESPONSE.statusText}`);
 await setTimeout(2000);
-let emailCode = prompt("Email 2FA Code: ");
-const response = await vrchat.verify2FaEmailCode({
-    body: {
-        code: emailCode
+const API_USER = await vrchat.getCurrentUser();
+if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
+    console.log("Needs authentification!");
+    if (API_USER.data.requiresTwoFactorAuth?.includes('emailOtp')) {
+        let emailOtpInput = prompt('Enter the 6-digits code sent to your email: ');
+        let API_USER_EMAILOTP = await vrchat.verify2FaEmailCode({ body: { code: emailOtpInput } });
     }
-});
-console.log(API_USER);
+    else if (API_USER.data.requiresTwoFactorAuth?.includes('totp')) {
+        let totpInput = prompt('Enter the 6-digits code on your authentificator app: ');
+        let API_USER_TOTP = await vrchat.verify2Fa({ body: { code: totpInput } });
+    }
+}
+const API_USER_DATA = await vrchat.getCurrentUser();
+console.log(API_USER_DATA.data);
