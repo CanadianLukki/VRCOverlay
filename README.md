@@ -1,5 +1,5 @@
-# AviOverlay
-A small overlay that shows your currently wearing avatar.
+# VRCOverlay
+A small browser overlay that shows VRChat information.
 
 
 
