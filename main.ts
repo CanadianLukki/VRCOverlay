@@ -13,7 +13,7 @@ const vrchat = new VRChat({
     version: "0.1",
     contact: "redirect@lukkiserver.com"
   },
-  keyv: new KeyvFile({ filename: "./data.json" }),
+  keyv: new KeyvFile({ filename: "./keyvfile.json" }),
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response
