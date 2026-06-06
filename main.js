@@ -1,10 +1,11 @@
 import { VRChat } from "vrchat";
+import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
 const vrchat = new VRChat({
     application: {
-        name: "AviOverlay",
+        name: "VRCOverlay",
         version: "0.1",
         contact: "redirect@lukkiserver.com"
     },
@@ -14,14 +15,15 @@ const vrchat = new VRChat({
             password: "########"
         },
     },
+    keyv: new KeyvFile({ filename: "./data.json" }),
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response;
 // Program execution
 console.log(`Received awnser from the VRChat API: ${API_CONFIG_RESPONSE.status} - ${API_CONFIG_RESPONSE.statusText}`);
-await setTimeout(2000);
-const API_USER = await vrchat.getCurrentUser();
-console.log(API_USER.data);
+await setTimeout(1000);
+let API_USER = await vrchat.getCurrentUser({});
+// TwoFactorAuth if needed
 if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
     console.log("Needs authentification!");
     if (API_USER.data.requiresTwoFactorAuth?.includes('emailOtp')) {
@@ -33,5 +35,12 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
         let API_USER_TOTP = await vrchat.verify2Fa({ body: { code: totpInput } });
     }
 }
-const API_USER_DATA = await vrchat.getCurrentUser();
-console.log(API_USER_DATA.data);
+API_USER = await vrchat.getCurrentUser({});
+if (API_USER.data && 'id' in API_USER.data) {
+    const API_AVTR_ID = API_USER.data.currentAvatar;
+    const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
+    console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+}
+else {
+    console.log(`Could not retrive avatar id.`);
+}
