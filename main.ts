@@ -4,6 +4,8 @@ import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 import { error } from "node:console";
 const prompt = promptSync();
+const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
+const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
 
 const vrchat = new VRChat({
   application: {
