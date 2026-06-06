@@ -3,6 +3,10 @@ import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
+const API_CONFIG = await vrchat.getConfig();
+const API_CONFIG_RESPONSE = API_CONFIG.response;
+const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
+const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
 const vrchat = new VRChat({
     application: {
         name: "VRCOverlay",
