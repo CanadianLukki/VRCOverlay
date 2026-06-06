@@ -3,7 +3,9 @@ import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 import { error } from "node:console";
+import express from 'express';
 const prompt = promptSync();
+const web = express();
 const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
 const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
 
@@ -13,11 +15,10 @@ const vrchat = new VRChat({
     version: "0.1",
     contact: "redirect@lukkiserver.com"
   },
-  keyv: new KeyvFile({ filename: "./keyvfile.json" }),
+  keyv: new KeyvFile({ filename: "./keyvfile.json" })
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response
-
 
 
 // Program execution
@@ -40,6 +41,15 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
   }
 }
 
+web.get('/', (request, response) => {
+  response.sendFile(`${process.cwd()}/overlay/page.html`);
+});
+
+web.listen(3000, () => {
+  console.log('The web server is currenlty running at http://localhost:3000');
+});
+
+// Loop to fetch data
 while (true) {
   API_USER = await vrchat.getCurrentUser({});
   if (API_USER.data && 'id' in API_USER.data) {
