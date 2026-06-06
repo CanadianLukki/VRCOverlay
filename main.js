@@ -21,8 +21,6 @@ const vrchat = new VRChat({
     },
     keyv: new KeyvFile({ filename: "./data.json" }),
 });
-const API_CONFIG = await vrchat.getConfig();
-const API_CONFIG_RESPONSE = API_CONFIG.response;
 // Program execution
 console.log(`Received awnser from the VRChat API: ${API_CONFIG_RESPONSE.status} - ${API_CONFIG_RESPONSE.statusText}`);
 await setTimeout(1000);
