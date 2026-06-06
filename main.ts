@@ -38,13 +38,20 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
   }
 }
 
-API_USER = await vrchat.getCurrentUser({});
+while (true) {
+  API_USER = await vrchat.getCurrentUser({});
+  if (API_USER.data && 'id' in API_USER.data) {
+    const API_AVTR_ID = API_USER.data.currentAvatar;
+    const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
 
-if (API_USER.data && 'id' in API_USER.data) {
-  const API_AVTR_ID = API_USER.data.currentAvatar;
+    const API_WORLD_ID = API_USER.data.presence?.world || 'None';
+    const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
 
-  const API_AVTR_INFO = await vrchat.getAvatar({path:{avatarId: API_AVTR_ID}});
-  console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by${API_AVTR_INFO.data?.authorName}.`);
-} else {
-  console.log(`Could not retrive avatar id.`);
+    console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+    console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+  }
+  else {
+    console.log(`Could not retrive user data.`);
+  }
+  await setTimeout(20000)
 }

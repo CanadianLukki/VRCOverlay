@@ -3,8 +3,6 @@ import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
-const API_CONFIG = await vrchat.getConfig();
-const API_CONFIG_RESPONSE = API_CONFIG.response;
 const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
 const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
 const vrchat = new VRChat({
@@ -21,6 +19,8 @@ const vrchat = new VRChat({
     },
     keyv: new KeyvFile({ filename: "./data.json" }),
 });
+const API_CONFIG = await vrchat.getConfig();
+const API_CONFIG_RESPONSE = API_CONFIG.response;
 // Program execution
 console.log(`Received awnser from the VRChat API: ${API_CONFIG_RESPONSE.status} - ${API_CONFIG_RESPONSE.statusText}`);
 await setTimeout(1000);
@@ -37,12 +37,18 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
         let API_USER_TOTP = await vrchat.verify2Fa({ body: { code: totpInput } });
     }
 }
-API_USER = await vrchat.getCurrentUser({});
-if (API_USER.data && 'id' in API_USER.data) {
-    const API_AVTR_ID = API_USER.data.currentAvatar;
-    const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
-    console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
-}
-else {
-    console.log(`Could not retrive avatar id.`);
+while (true) {
+    API_USER = await vrchat.getCurrentUser({});
+    if (API_USER.data && 'id' in API_USER.data) {
+        const API_AVTR_ID = API_USER.data.currentAvatar;
+        const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
+        const API_WORLD_ID = API_USER.data.presence?.world || 'None';
+        const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
+        console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+        console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+    }
+    else {
+        console.log(`Could not retrive user data.`);
+    }
+    await setTimeout(20000);
 }
