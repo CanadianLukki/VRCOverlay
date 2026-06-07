@@ -5,7 +5,7 @@ import promptSync from 'prompt-sync';
 import express from 'express';
 const prompt = promptSync();
 const web = express();
-let currentVRCData = {
+let currentAvatarData = {
     avatarName: "Loading...",
     avatarAuthor: "Loading...",
     avatarRating: "Loading...",
@@ -40,9 +40,13 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
         let API_USER_TOTP = await vrchat.verify2Fa({ body: { code: totpInput } });
     }
 }
+// Initalize and send the data to the overlay
 web.use(express.static(`${process.cwd()}/overlay`));
 web.get('/', (request, response) => {
     response.sendFile(`${process.cwd()}/overlay/page.html`);
+});
+web.get('/currentAvatarData', (request, response) => {
+    response.json(currentAvatarData);
 });
 web.listen(3000, () => {
     console.log('The web server is currenlty running at http://localhost:3000');
@@ -55,6 +59,12 @@ while (true) {
         const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
         const API_WORLD_ID = API_USER.data.presence?.world || 'None';
         const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
+        currentAvatarData = {
+            avatarName: `${API_AVTR_INFO.data?.name}`,
+            avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
+            avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
+            avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`
+        };
         console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
         console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
         console.log(`Avatar thumbnail link: ${API_AVTR_INFO.data?.thumbnailImageUrl}`);

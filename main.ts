@@ -3,11 +3,12 @@ import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 import { error } from "node:console";
-import express from 'express';
+import express, { response } from 'express';
+import { request } from "node:http";
 const prompt = promptSync();
 const web = express();
 
-let currentVRCData = {
+let currentAvatarData = {
   avatarName: "Loading...",
   avatarAuthor: "Loading...",
   avatarRating: "Loading...",
@@ -50,10 +51,15 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
   }
 }
 
+// Initalize and send the data to the overlay
 web.use(express.static(`${process.cwd()}/overlay`));
 
 web.get('/', (request, response) => {
   response.sendFile(`${process.cwd()}/overlay/page.html`);
+});
+
+web.get('/currentAvatarData', (request, response) => {
+  response.json(currentAvatarData);
 });
 
 web.listen(3000, () => {
@@ -69,6 +75,13 @@ while (true) {
 
     const API_WORLD_ID: string = API_USER.data.presence?.world || 'None';
     const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
+
+    currentAvatarData = {
+      avatarName: `${API_AVTR_INFO.data?.name}`,
+      avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
+      avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
+      avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`
+    }
     
     console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
     console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`)
