@@ -2,3 +2,7 @@ html, body {
     background-color: transparent;
     background: transparent;
 }
+
+.radius-pfp {
+    border-radius: 10px;
+}

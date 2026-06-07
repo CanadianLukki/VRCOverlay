@@ -8,6 +8,10 @@ const prompt = promptSync();
 const web = express();
 const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
 const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
+const OVRL_PFP = document.getElementById('avatar-pfp');
+const OVRL_NAME = document.getElementById('avatar-name');
+const OVRL_RATING = document.getElementById('avatar-rating');
+const OVRL_AUTHOR = document.getElementById('avatar-author');
 
 const vrchat = new VRChat({
   application: {
@@ -58,16 +62,17 @@ while (true) {
 
     const API_WORLD_ID: string = API_USER.data.presence?.world || 'None';
     const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
-
+    
     console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+    console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`)
     console.log(`Avatar thumbnail link: ${API_AVTR_INFO.data?.thumbnailImageUrl}`)
 
-    if (API_WORLD_ID != 'None'){
+    if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined){
       console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
     }
   }
   else {
     console.log(`Could not retrive user data.`);
   }
-  await setTimeout(20000)
+  await setTimeout(10000)
 }
