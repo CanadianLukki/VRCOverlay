@@ -53,14 +53,18 @@ web.listen(3000, () => {
 while (true) {
   API_USER = await vrchat.getCurrentUser({});
   if (API_USER.data && 'id' in API_USER.data) {
-    const API_AVTR_ID = API_USER.data.currentAvatar;
+    const API_AVTR_ID: string = API_USER.data.currentAvatar;
     const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
 
-    const API_WORLD_ID = API_USER.data.presence?.world || 'None';
+    const API_WORLD_ID: string = API_USER.data.presence?.world || 'None';
     const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
 
     console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
-    console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+    console.log(`Avatar thumbnail link: ${API_AVTR_INFO.data?.thumbnailImageUrl}`)
+
+    if (API_WORLD_ID != 'None'){
+      console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+    }
   }
   else {
     console.log(`Could not retrive user data.`);
