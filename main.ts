@@ -8,10 +8,6 @@ const prompt = promptSync();
 const web = express();
 const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
 const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
-const OVRL_PFP = document.getElementById('avatar-pfp');
-const OVRL_NAME = document.getElementById('avatar-name');
-const OVRL_RATING = document.getElementById('avatar-rating');
-const OVRL_AUTHOR = document.getElementById('avatar-author');
 
 const vrchat = new VRChat({
   application: {
