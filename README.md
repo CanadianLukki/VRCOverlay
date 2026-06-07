@@ -7,4 +7,5 @@ To avoid API rate limitation, the tool fetches and check for changes every 30 se
   
 ## Acknowledgements
 VRChat API from <a href="https://vrchat.community">VRChat.community</a>.  
-<a href="https://tauri.app">Tauri</a> for the interface.
+<a href="https://tauri.app">Tauri</a> for the interface.  
+<a href="https://bulma.io">Bulma</a> for the CSS.
