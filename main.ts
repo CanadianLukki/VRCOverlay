@@ -18,21 +18,41 @@ let currentAvatarData = {
   avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 }
 
-async function authVRChat
+async function authVRChat() {
+  let email = await creds.get('vrc-email') as string;
+  let password = await creds.get('vrc-password') as string;
 
-const vrchat = new VRChat({
-  application: {
-    name: "VRCOverlay",
-    version: "0.1",
-    contact: "redirect@lukkiserver.com"
-  },
-  authentication: {
-    credentials: {
-      username: "email",
-      password: "password"
+  if (!email || !password) {
+    console.log('====== VRChat Login ======')
+    let emailPrompt: string = prompt('Enter the email address of your VRC account: ');
+    let passwordPrompt: string = prompt('Enter the password of your VRC account: ', { echo: '*' });
+
+    await creds.set('vrc-email', emailPrompt);
+    await creds.set('vrc-password', passwordPrompt);
+    console.log('Credentials saved for future usage.');
+  }
+  email = await creds.get('vrc-email') as string;
+  password = await creds.get('vrc-password') as string;
+
+  const vrchat = new VRChat({
+    application: {
+      name: "VRCOverlay",
+      version: "0.1",
+      contact: "redirect@lukkiserver.com"
     },
-  },
-});
+    authentication: {
+      credentials: {
+        username: email,
+        password: password
+      },
+    },
+    keyv: creds
+  });
+  return vrchat;
+}
+
+const vrchat = await authVRChat();
+
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response
 

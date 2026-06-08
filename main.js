@@ -1,33 +1,49 @@
 import { VRChat } from "vrchat";
+import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 import express from 'express';
 const prompt = promptSync();
 const web = express();
+const creds = new KeyvFile({
+    filename: `${process.cwd()}/credentials.json`
+});
 let currentAvatarData = {
     avatarName: "Loading...",
     avatarAuthor: "Loading...",
     avatarRating: "Loading...",
     avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 };
-// I'll work on it soon I think...
-const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
-const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
-let emailPrompt = prompt('Enter the email of the account: ');
-let passwordPrompt = prompt('Enter the password of the account: ');
-const vrchat = new VRChat({
-    application: {
-        name: "VRCOverlay",
-        version: "0.1",
-        contact: "redirect@lukkiserver.com"
-    },
-    authentication: {
-        credentials: {
-            username: "emailPrompt",
-            password: "passwordPrompt"
+async function authVRChat() {
+    let email = await creds.get('vrc-email');
+    let password = await creds.get('vrc-password');
+    if (!email || !password) {
+        console.log('====== VRChat Login ======');
+        let emailPrompt = prompt('Enter the email address of your VRC account: ');
+        let passwordPrompt = prompt('Enter the password of your VRC account: ', { echo: '*' });
+        await creds.set('vrc-email', emailPrompt);
+        await creds.set('vrc-password', passwordPrompt);
+        console.log('Credentials saved for future usage.');
+    }
+    email = await creds.get('vrc-email');
+    password = await creds.get('vrc-password');
+    const vrchat = new VRChat({
+        application: {
+            name: "VRCOverlay",
+            version: "0.1",
+            contact: "redirect@lukkiserver.com"
         },
-    },
-});
+        authentication: {
+            credentials: {
+                username: email,
+                password: password
+            },
+        },
+        keyv: creds
+    });
+    return vrchat;
+}
+const vrchat = await authVRChat();
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response;
 // Program execution
