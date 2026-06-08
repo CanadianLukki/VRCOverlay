@@ -13,6 +13,8 @@ let currentAvatarData = {
 // I'll work on it soon I think...
 const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
 const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
+let emailPrompt = prompt('Enter the email of the account: ');
+let passwordPrompt = prompt('Enter the password of the account: ');
 const vrchat = new VRChat({
     application: {
         name: "VRCOverlay",
@@ -21,8 +23,8 @@ const vrchat = new VRChat({
     },
     authentication: {
         credentials: {
-            username: "contactme@lukkiserver.com",
-            password: "E3eVz8fUU6X6XRBcd"
+            username: "emailPrompt",
+            password: "passwordPrompt"
         },
     },
 });

@@ -7,6 +7,9 @@ import express, { response } from 'express';
 import { request } from "node:http";
 const prompt = promptSync();
 const web = express();
+const creds = new KeyvFile({
+  filename: `${process.cwd()}/credentials.json`
+})
 
 let currentAvatarData = {
   avatarName: "Loading...",
@@ -15,9 +18,7 @@ let currentAvatarData = {
   avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 }
 
-// I'll work on it soon I think...
-const VRC_WORLD_REGEX = /Joining (wrld_.{36})/g;
-const VRC_AVATAR_REGEX = /Loading Avatar Data:(avtr_.{36})/g;
+async function authVRChat
 
 const vrchat = new VRChat({
   application: {
@@ -27,8 +28,8 @@ const vrchat = new VRChat({
   },
   authentication: {
     credentials: {
-      username: "contactme@lukkiserver.com",
-      password: "E3eVz8fUU6X6XRBcd"
+      username: "email",
+      password: "password"
     },
   },
 });
