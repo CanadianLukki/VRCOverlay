@@ -1,9 +1,35 @@
 html, body {
     background-color: transparent;
     background: transparent;
+    overflow: hidden;
 }
 
 .radius-pfp {
     border-radius: 10px;
     border: 3px solid #ffffff;
+}
+
+.avi-excellent {
+    background-color: #2f853c;
+    color: white;
+}
+
+.avi-good {
+    background-color: rgb(93, 148, 25);
+    color: white;
+}
+
+.avi-medium {
+    background-color: #857c2f;
+    color: white;
+}
+
+.avi-poor {
+    background-color: #853a2f;
+    color: white;
+}
+
+.avi-reallyPoor {
+    background-color: #921c1c;
+    color: white;
 }

@@ -11,6 +11,25 @@ async function updateAviOverlay() {
     OVRL_AUTHOR.textContent = `By ${data.avatarAuthor}`;
     OVRL_RATING.textContent = data.avatarRating;
     OVRL_PFP.src = data.avatarImgUrl;
+
+    switch(OVRL_RATING.textContent){
+        case 'Excellent':
+            OVRL_RATING.className = 'tag avi-excellent';
+            break;
+        case 'Good':
+            OVRL_RATING.className ='tag avi-good';
+            break;
+        case 'Medium':
+            OVRL_RATING.className = 'tag avi-medium';
+            break;
+        case 'Poor':
+            OVRL_RATING.className = 'tag avi-poor';
+            break;
+        case 'VeryPoor':
+            OVRL_RATING.className = 'tag avi-reallyPoor';
+            break;
+    }
+     
 }
 
 updateAviOverlay();

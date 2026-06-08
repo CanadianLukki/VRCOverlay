@@ -25,7 +25,12 @@ const vrchat = new VRChat({
     version: "0.1",
     contact: "redirect@lukkiserver.com"
   },
-  keyv: new KeyvFile({ filename: "./keyvfile.json" })
+  authentication: {
+    credentials: {
+      username: "contactme@lukkiserver.com",
+      password: "E3eVz8fUU6X6XRBcd"
+    },
+  },
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response
@@ -82,12 +87,12 @@ while (true) {
       avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
       avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`
     }
-    
+
     console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
     console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`)
     console.log(`Avatar thumbnail link: ${API_AVTR_INFO.data?.thumbnailImageUrl}`)
 
-    if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined){
+    if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
       console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
     }
   }

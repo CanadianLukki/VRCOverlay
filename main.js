@@ -1,5 +1,4 @@
 import { VRChat } from "vrchat";
-import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
 import express from 'express';
@@ -20,7 +19,12 @@ const vrchat = new VRChat({
         version: "0.1",
         contact: "redirect@lukkiserver.com"
     },
-    keyv: new KeyvFile({ filename: "./keyvfile.json" })
+    authentication: {
+        credentials: {
+            username: "contactme@lukkiserver.com",
+            password: "E3eVz8fUU6X6XRBcd"
+        },
+    },
 });
 const API_CONFIG = await vrchat.getConfig();
 const API_CONFIG_RESPONSE = API_CONFIG.response;
