@@ -1,43 +1,25 @@
 {
-  
   "name": "avioverlay",
-  
   "version": "1.0.0",
-  
   "type": "module",
-  
-  "dependencies": {
-  
-    
-  "@types/prompt-sync": "^4.2.3",
-  
-    
-  "express": "^5.2.1",
-  
-    
-  "keyv": "^5.6.0",
-  
-    
-  "keyv-file": "^5.3.3",
-  
-    
-  "prompt-sync": "^4.2.0",
-  
-    
-  "vrchat": "^2.21.7"
-  
+  "scripts": {
+    "build:backend": "tsc",
+    "dev:backend": "tsc",
+    "dev": "tauri dev",
+    "build": "tauri build"
   },
-  
+  "dependencies": {
+    "@types/prompt-sync": "^4.2.3",
+    "express": "^5.2.1",
+    "keyv": "^5.6.0",
+    "keyv-file": "^5.3.3",
+    "prompt-sync": "^4.2.0",
+    "vrchat": "^2.21.7"
+  },
   "devDependencies": {
-  
-    
-  "@types/express": "^5.0.6",
-  
-    
-  "@types/node": "^25.9.1",
-  
-    
-  "typed-emitter": "^2.1.0"
-  
+    "@tauri-apps/cli": "^2.11.2",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.1",
+    "typed-emitter": "^2.1.0"
   }
 }
