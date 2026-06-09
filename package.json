@@ -17,9 +17,8 @@
     "vrchat": "^2.21.7"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.11.2",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "typed-emitter": "^2.1.0"
   }
 }
