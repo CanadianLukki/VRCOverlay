@@ -2,10 +2,13 @@ import { VRChat } from "vrchat";
 import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
-import { error } from "node:console";
 import express from 'express';
+import { unlink } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 const prompt = promptSync();
 const web = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const creds = new KeyvFile({
     filename: `${process.cwd()}/credentials.json`
 });
@@ -26,6 +29,7 @@ let currentWorldData = {
 async function authVRChat() {
     let email = await creds.get('vrc-email');
     let password = await creds.get('vrc-password');
+    console.clear();
     if (!email || !password) {
         console.log('======================= VRChat Login =======================');
         let emailPrompt = prompt('Enter the email address of your VRC account: ');
@@ -71,13 +75,13 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
         let API_USER_TOTP = await vrchat.verify2Fa({ body: { code: totpInput } });
     }
 }
-// Initalize and send the data to the overlay
-web.use(express.static(`${process.cwd()}/overlay`));
+// Initalize and send the data to the overlay, check if the credentials are good.
+web.use(express.static(path.join(__dirname, 'overlay')));
 web.get('/avatar', (request, response) => {
-    response.sendFile(`${process.cwd()}/overlay/avatar.html`);
+    response.sendFile(path.join(__dirname, 'overlay', 'avatar.html'));
 });
 web.get('/world', (request, response) => {
-    response.sendFile(`${process.cwd()}/overlay/world.html`);
+    response.sendFile(path.join(__dirname, 'overlay', 'world.html'));
 });
 web.get('/currentAvatarData', (request, response) => {
     response.json(currentAvatarData);
@@ -88,7 +92,8 @@ web.get('/currentWorldData', (request, response) => {
 web.listen(3000, () => {
     console.log('Starting web server at http://localhost:3000...');
 });
-// Loop to fetch data
+// Loop to fetch data. Stop if the creds are invalid and stop the execution of requesting data.
+let credsfileDeleted = false;
 while (true) {
     API_USER = await vrchat.getCurrentUser({});
     if (API_USER.data && 'id' in API_USER.data) {
@@ -111,6 +116,7 @@ while (true) {
             worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
         };
         console.clear();
+        console.log(`Logged in as: ${API_USER.data.displayName}\n`);
         console.log("============================================================");
         console.log("            Overlay Server running on port 3000");
         console.log("   Avatar Browser Source URL: http://localhost:3000/avatar");
@@ -122,16 +128,21 @@ while (true) {
         if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
             console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.\n`);
             console.log("Platforms:");
-            console.log(`PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
-            console.log(`Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
-            console.log(`IOS: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`);
+            console.log(` PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
+            console.log(` Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
+            console.log(` IOS: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`);
         }
         else {
             console.log(`Not in a world right now.`);
         }
     }
     else {
-        console.log(`Could not retrive user data.`, error);
+        console.clear();
+        console.error(`Could not retrive user data with given credentials. Please restart the program and try again.`);
+        if (credsfileDeleted === false) {
+            await unlink(`${process.cwd()}/credentials.json`);
+            credsfileDeleted = true;
+        }
     }
     await setTimeout(10000);
 }
