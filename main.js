@@ -27,7 +27,7 @@ async function authVRChat() {
     let email = await creds.get('vrc-email');
     let password = await creds.get('vrc-password');
     if (!email || !password) {
-        console.log('====== VRChat Login ======');
+        console.log('======================= VRChat Login =======================');
         let emailPrompt = prompt('Enter the email address of your VRC account: ');
         let passwordPrompt = prompt('Enter the password of your VRC account: ', { echo: '*' });
         await creds.set('vrc-email', emailPrompt);

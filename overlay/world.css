@@ -9,27 +9,14 @@ html, body {
     border: 3px solid #ffffff;
 }
 
-.avi-excellent {
-    background-color: #2f853c;
-    color: white;
+#pcTag{
+    background-color: rgb(0, 81, 194);
 }
 
-.avi-good {
-    background-color: rgb(93, 148, 25);
-    color: white;
+#androidTag{
+    background-color: rgb(0, 142, 0);
 }
 
-.avi-medium {
-    background-color: #857c2f;
-    color: white;
-}
-
-.avi-poor {
-    background-color: #853a2f;
-    color: white;
-}
-
-.avi-reallyPoor {
-    background-color: #921c1c;
-    color: white;
+#iosTag{
+    background-color: #7b7b7b;
 }
