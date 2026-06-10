@@ -13,6 +13,12 @@ async function updateWorldOverlay(){
     OVRL_AUTHOR.textContent = `By ${data.worldAuthor}`;
     OVRL_PFP.src = data.worldImgUrl;
 
+    if(data.worldName === undefined){
+        OVRL_NAME.textContent = 'Not in a world...'
+        OVRL_AUTHOR.textContent = ``;
+        OVRL_PFP.src - "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fapi.vrchat.cloud%2Fapi%2F1%2Ffile%2Ffile_c2b7ad18-5276-4e9b-aef7-8e18555e5030%2F7%2Ffile&f=1&nofb=1&ipt=0e5410108d29cb32e76debcc7bd3d82596ee2dc7c31844fbcbfde71871133528"
+    }
+
     if(data.worldAndroid === "true"){
         OVRL_ANDROID_TAG.classList.remove('is-hidden');
     } else {

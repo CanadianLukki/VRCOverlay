@@ -1,5 +1,5 @@
 {
-  "name": "avioverlay",
+  "name": "VRCOverlay",
   "version": "1.0.0",
   "type": "module",
   "bin": "main.js",

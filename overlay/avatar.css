@@ -4,6 +4,16 @@ html, body {
     overflow: hidden;
 }
 
+#box{
+    position: relative;
+}
+
+#watermark{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
 .radius-pfp {
     border-radius: 10px;
     border: 3px solid #ffffff;
