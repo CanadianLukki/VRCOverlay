@@ -1,5 +1,5 @@
 # VRCOverlay
-A small browser overlay that shows VRChat information.  
+A small streaming overlay that shows VRChat information about current world and avatar.  
   
 The tool uses the VRChat API to retreive avatar metadata and then display it on an HTML overlay that you can put on apps like OBS, Streamlabs, TikTok Live App or any other similar app that supports adding a browser source.  
   
