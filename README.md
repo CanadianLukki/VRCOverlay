@@ -12,5 +12,5 @@ To get profile information and current world information, you need to communicat
 I am not a coding expert. Not now as I am making this tool. If someone find issues and find fixes, I would be happy if I could learn from you and improve my skills.
 
 ## Acknowledgements
-VRChat API from <a href="https://vrchat.community">VRChat.community</a>.
+VRChat API from <a href="https://vrchat.community">VRChat.community</a>.  
 Web server hosted using <a href="https://vrchat.community">expressjs</a>. 
