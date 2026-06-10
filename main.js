@@ -2,6 +2,7 @@ import { VRChat } from "vrchat";
 import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
 import promptSync from 'prompt-sync';
+import { error } from "node:console";
 import express from 'express';
 const prompt = promptSync();
 const web = express();
@@ -13,6 +14,14 @@ let currentAvatarData = {
     avatarAuthor: "Loading...",
     avatarRating: "Loading...",
     avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
+};
+let currentWorldData = {
+    worldName: "Loading...",
+    worldAuthor: "Loading...",
+    worldAndroid: "false",
+    worldWindows: "false",
+    worldIos: "false",
+    worldImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 };
 async function authVRChat() {
     let email = await creds.get('vrc-email');
@@ -64,14 +73,20 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
 }
 // Initalize and send the data to the overlay
 web.use(express.static(`${process.cwd()}/overlay`));
-web.get('/', (request, response) => {
-    response.sendFile(`${process.cwd()}/overlay/page.html`);
+web.get('/avatar', (request, response) => {
+    response.sendFile(`${process.cwd()}/overlay/avatar.html`);
+});
+web.get('/world', (request, response) => {
+    response.sendFile(`${process.cwd()}/overlay/world.html`);
 });
 web.get('/currentAvatarData', (request, response) => {
     response.json(currentAvatarData);
 });
+web.get('/currentWorldData', (request, response) => {
+    response.json(currentWorldData);
+});
 web.listen(3000, () => {
-    console.log('The web server is currenlty running at http://localhost:3000');
+    console.log('Starting web server at http://localhost:3000...');
 });
 // Loop to fetch data
 while (true) {
@@ -87,15 +102,36 @@ while (true) {
             avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
             avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`
         };
-        console.log(`Currently wearing ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
-        console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
-        console.log(`Avatar thumbnail link: ${API_AVTR_INFO.data?.thumbnailImageUrl}`);
+        currentWorldData = {
+            worldName: `${API_WORLD_INFO.data?.name}`,
+            worldAuthor: `${API_WORLD_INFO.data?.authorName}`,
+            worldAndroid: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`,
+            worldWindows: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`,
+            worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
+            worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
+        };
+        console.clear();
+        console.log("============================================================");
+        console.log("            Overlay Server running on port 3000");
+        console.log("   Avatar Browser Source URL: http://localhost:3000/avatar");
+        console.log("    World Browser Source URL: http://localhost:3000/world");
+        console.log("============================================================\n");
+        console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+        console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}\n`);
+        console.log("------------------------------------------------------\n");
         if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
-            console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+            console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.\n`);
+            console.log("Platforms:");
+            console.log(`PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
+            console.log(`Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
+            console.log(`IOS: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`);
+        }
+        else {
+            console.log(`Not in a world right now.`);
         }
     }
     else {
-        console.log(`Could not retrive user data.`);
+        console.log(`Could not retrive user data.`, error);
     }
     await setTimeout(10000);
 }
