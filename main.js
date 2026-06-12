@@ -119,8 +119,8 @@ while (true) {
         console.log(`Logged in as: ${API_USER.data.displayName}\n`);
         console.log("============================================================");
         console.log("            Overlay Server running on port 3000");
-        console.log("   Avatar Browser Source URL: http://localhost:3000/avatar");
-        console.log("    World Browser Source URL: http://localhost:3000/world");
+        console.log("   Avatar Browser Source URL: http://lvh.me:3000/avatar");
+        console.log("    World Browser Source URL: http://lvh.me:3000/world");
         console.log("============================================================\n");
         console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
         console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}\n`);
