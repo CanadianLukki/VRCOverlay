@@ -149,7 +149,7 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
       console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}\n`);
       console.log("------------------------------------------------------\n");
       if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
-        console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.\n`);
+        console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
         console.log("Platforms:");
         console.log(` PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
         console.log(` Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
