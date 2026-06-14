@@ -6,6 +6,7 @@ import express from 'express';
 import { unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import config from './config.json' with { type: 'json' };
 const prompt = promptSync();
 const web = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -16,7 +17,9 @@ let currentAvatarData = {
     avatarName: "Loading...",
     avatarAuthor: "Loading...",
     avatarRating: "Loading...",
-    avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
+    avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images",
+    showAuthorOnPrivate: true,
+    releaseStatus: ""
 };
 let currentWorldData = {
     worldName: "Loading...",
@@ -84,6 +87,7 @@ web.get('/world', (request, response) => {
     response.sendFile(path.join(__dirname, 'overlay', 'world.html'));
 });
 web.get('/currentAvatarData', (request, response) => {
+    currentAvatarData.showAuthorOnPrivate = config.showAuthorOnPrivate;
     response.json(currentAvatarData);
 });
 web.get('/currentWorldData', (request, response) => {
@@ -105,7 +109,9 @@ while (true) {
             avatarName: `${API_AVTR_INFO.data?.name}`,
             avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
             avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
-            avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`
+            avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`,
+            showAuthorOnPrivate: config.showAuthorOnPrivate,
+            releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`
         };
         currentWorldData = {
             worldName: `${API_WORLD_INFO.data?.name}`,
@@ -115,7 +121,7 @@ while (true) {
             worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
             worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
         };
-        console.clear();
+        await console.clear();
         console.log(`Logged in as: ${API_USER.data.displayName}\n`);
         console.log("============================================================");
         console.log("            Overlay Server running on port 3000");
@@ -123,7 +129,9 @@ while (true) {
         console.log("    World Browser Source URL: http://lvh.me:3000/world");
         console.log("============================================================\n");
         console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
-        console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}\n`);
+        console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
+        console.log(`Release status: ${API_AVTR_INFO.data?.releaseStatus}`);
+        console.log(`Show author on private: ${config.showAuthorOnPrivate}\n`);
         console.log("------------------------------------------------------\n");
         if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
             console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
