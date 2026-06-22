@@ -1,15 +1,17 @@
 import { VRChat } from "vrchat";
 import { KeyvFile } from "keyv-file";
 import { setTimeout } from 'node:timers/promises';
+import { createRequire } from 'node:module';
 import promptSync from 'prompt-sync';
 import express from 'express';
 import { unlink } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import config from './config.json' with { type: 'json' };
 const prompt = promptSync();
 const web = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const config = require(path.join(process.cwd(), 'config.json'));
 const creds = new KeyvFile({
   filename: `${process.cwd()}/credentials.json`
 })
