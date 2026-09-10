@@ -35,36 +35,39 @@ let currentWorldData = {
 }
 
 async function authVRChat() {
-  let email = await creds.get('vrc-email') as string;
-  let password = await creds.get('vrc-password') as string;
-
-  console.clear();
-  if (!email || !password) {
-    console.log('======================= VRChat Login =======================')
-    let emailPrompt: string = prompt('Enter the email address of your VRC account: ');
-    let passwordPrompt: string = prompt('Enter the password of your VRC account: ', { echo: '*' });
-
-    await creds.set('vrc-email', emailPrompt);
-    await creds.set('vrc-password', passwordPrompt);
-    console.log('Credentials saved for future usage.');
-  }
-  email = await creds.get('vrc-email') as string;
-  password = await creds.get('vrc-password') as string;
-
-  const vrchat = new VRChat({
+  let vrchat = new VRChat({
     application: {
       name: "VRCOverlay",
       version: "0.1",
       contact: "redirect@lukkiserver.com"
     },
-    authentication: {
-      credentials: {
-        username: email,
-        password: password
-      },
-    },
     keyv: creds
   });
+
+  let currentUser = await vrchat.getCurrentUser({});
+  console.log(currentUser);
+
+  console.clear();
+  if (!currentUser.data || !('id' in currentUser.data)) {
+    console.log('======================= VRChat Login =======================')
+    let emailPrompt: string = prompt('Enter the email address of your VRC account: ');
+    let passwordPrompt: string = prompt('Enter the password of your VRC account: ', { echo: '*' });
+
+    vrchat = new VRChat({
+      application: {
+        name: "VRCOverlay",
+        version: "0.1",
+        contact: "redirect@lukkiserver.com"
+      },
+      authentication: {
+        credentials: {
+          username: emailPrompt,
+          password: passwordPrompt
+        },
+      },
+      keyv: creds
+    });
+  }
   return vrchat;
 }
 
@@ -96,84 +99,84 @@ if (API_USER.data && 'requiresTwoFactorAuth' in API_USER.data) {
 
 // Initalize and send the data to the overlay, check if the credentials are good.
 
-  web.use(express.static(path.join(__dirname, 'overlay')));
+web.use(express.static(path.join(__dirname, 'overlay')));
 
-  web.get('/avatar', (request, response) => {
-    response.sendFile(path.join(__dirname, 'overlay', 'avatar.html'));
-  });
+web.get('/avatar', (request, response) => {
+  response.sendFile(path.join(__dirname, 'overlay', 'avatar.html'));
+});
 
-  web.get('/world', (request, response) => {
-    response.sendFile(path.join(__dirname, 'overlay', 'world.html'));
-  });
+web.get('/world', (request, response) => {
+  response.sendFile(path.join(__dirname, 'overlay', 'world.html'));
+});
 
-  web.get('/currentAvatarData', (request, response) => {
-    response.json(currentAvatarData);
-  });
+web.get('/currentAvatarData', (request, response) => {
+  response.json(currentAvatarData);
+});
 
-  web.get('/currentWorldData', (request, response) => {
-    response.json(currentWorldData);
-  });
+web.get('/currentWorldData', (request, response) => {
+  response.json(currentWorldData);
+});
 
-  web.listen(3000, () => {
-    console.log('Starting web server at http://localhost:3000...');
-  });
+web.listen(3000, () => {
+  console.log('Starting web server at http://localhost:3000...');
+});
 
-  // Loop to fetch data. Stop if the creds are invalid and stop the execution of requesting data.
-  let credsfileDeleted: boolean = false;
-  while (true) {
-    API_USER = await vrchat.getCurrentUser({});
-    if (API_USER.data && 'id' in API_USER.data) {
-      const API_AVTR_ID: string = API_USER.data.currentAvatar;
-      const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
-      const API_WORLD_ID: string = API_USER.data.presence?.world || 'None';
-      const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
-      currentAvatarData = {
-        avatarName: `${API_AVTR_INFO.data?.name}`,
-        avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
-        avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
-        avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`,
-        showAuthorOnPrivate: config.showAuthorOnPrivate,
-        releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`
-      };
+// Loop to fetch data. Stop if the creds are invalid and stop the execution of requesting data.
+let credsfileDeleted: boolean = false;
+while (true) {
+  API_USER = await vrchat.getCurrentUser({});
+  if (API_USER.data && 'id' in API_USER.data) {
+    const API_AVTR_ID: string = API_USER.data.currentAvatar;
+    const API_AVTR_INFO = await vrchat.getAvatar({ path: { avatarId: API_AVTR_ID } });
+    const API_WORLD_ID: string = API_USER.data.presence?.world || 'None';
+    const API_WORLD_INFO = await vrchat.getWorld({ path: { worldId: API_WORLD_ID } });
+    currentAvatarData = {
+      avatarName: `${API_AVTR_INFO.data?.name}`,
+      avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
+      avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
+      avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`,
+      showAuthorOnPrivate: config.showAuthorOnPrivate,
+      releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`
+    };
 
-      currentWorldData = {
-        worldName: `${API_WORLD_INFO.data?.name}`,
-        worldAuthor: `${API_WORLD_INFO.data?.authorName}`,
-        worldAndroid: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`,
-        worldWindows: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`,
-        worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
-        worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
-      }
-
-      await console.clear()
-      console.log(`Logged in as: ${API_USER.data.displayName}\n`);
-      console.log("============================================================");
-      console.log("            Overlay Server running on port 3000");
-      console.log("   Avatar Browser Source URL: http://lvh.me:3000/avatar");
-      console.log("    World Browser Source URL: http://lvh.me:3000/world");
-      console.log("============================================================\n");
-      console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
-      console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
-      console.log(`Release status: ${API_AVTR_INFO.data?.releaseStatus}`)
-      console.log(`Show author on private: ${config.showAuthorOnPrivate}\n`);
-      console.log("------------------------------------------------------\n");
-      if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
-        console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
-        console.log("Platforms:");
-        console.log(` PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
-        console.log(` Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
-        console.log(` IOS: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`);
-      } else {
-        console.log(`Not in a world right now.`);
-      }
+    currentWorldData = {
+      worldName: `${API_WORLD_INFO.data?.name}`,
+      worldAuthor: `${API_WORLD_INFO.data?.authorName}`,
+      worldAndroid: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`,
+      worldWindows: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`,
+      worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
+      worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
     }
-    else {
-      console.clear()
-      console.error(`Could not retrive user data with given credentials. Please restart the program and try again.`);
-      if (credsfileDeleted === false) {
-        await unlink(`${process.cwd()}/credentials.json`);
-        credsfileDeleted = true
-      }
+
+    await console.clear()
+    console.log(`Logged in as: ${API_USER.data.displayName}\n`);
+    console.log("============================================================");
+    console.log("            Overlay Server running on port 3000");
+    console.log("   Avatar Browser Source URL: http://lvh.me:3000/avatar");
+    console.log("    World Browser Source URL: http://lvh.me:3000/world");
+    console.log("============================================================\n");
+    console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
+    console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
+    console.log(`Release status: ${API_AVTR_INFO.data?.releaseStatus}`)
+    console.log(`Show author on private: ${config.showAuthorOnPrivate}\n`);
+    console.log("------------------------------------------------------\n");
+    if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
+      console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
+      console.log("Platforms:");
+      console.log(` PC: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`);
+      console.log(` Android: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`);
+      console.log(` IOS: ${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`);
+    } else {
+      console.log(`Not in a world right now.`);
     }
-    await setTimeout(10000);
   }
+  else {
+    console.clear()
+    console.error(`Could not retrive user data with given credentials. Please restart the program and try again.`);
+    if (credsfileDeleted === false) {
+      await unlink(`${process.cwd()}/credentials.json`);
+      credsfileDeleted = true
+    }
+  }
+  await setTimeout(10000);
+}

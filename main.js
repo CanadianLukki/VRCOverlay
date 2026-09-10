@@ -32,33 +32,36 @@ let currentWorldData = {
     worldImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 };
 async function authVRChat() {
-    let email = await creds.get('vrc-email');
-    let password = await creds.get('vrc-password');
-    console.clear();
-    if (!email || !password) {
-        console.log('======================= VRChat Login =======================');
-        let emailPrompt = prompt('Enter the email address of your VRC account: ');
-        let passwordPrompt = prompt('Enter the password of your VRC account: ', { echo: '*' });
-        await creds.set('vrc-email', emailPrompt);
-        await creds.set('vrc-password', passwordPrompt);
-        console.log('Credentials saved for future usage.');
-    }
-    email = await creds.get('vrc-email');
-    password = await creds.get('vrc-password');
-    const vrchat = new VRChat({
+    let vrchat = new VRChat({
         application: {
             name: "VRCOverlay",
             version: "0.1",
             contact: "redirect@lukkiserver.com"
         },
-        authentication: {
-            credentials: {
-                username: email,
-                password: password
-            },
-        },
         keyv: creds
     });
+    let currentUser = await vrchat.getCurrentUser({});
+    console.log(currentUser);
+    console.clear();
+    if (!currentUser.data || !('id' in currentUser.data)) {
+        console.log('======================= VRChat Login =======================');
+        let emailPrompt = prompt('Enter the email address of your VRC account: ');
+        let passwordPrompt = prompt('Enter the password of your VRC account: ', { echo: '*' });
+        vrchat = new VRChat({
+            application: {
+                name: "VRCOverlay",
+                version: "0.1",
+                contact: "redirect@lukkiserver.com"
+            },
+            authentication: {
+                credentials: {
+                    username: emailPrompt,
+                    password: passwordPrompt
+                },
+            },
+            keyv: creds
+        });
+    }
     return vrchat;
 }
 const vrchat = await authVRChat();
