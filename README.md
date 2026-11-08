@@ -23,4 +23,4 @@ I am not a coding expert. Not now as I am making this tool. If someone find issu
 
 ## Acknowledgements
 VRChat API from <a href="https://vrchat.community">VRChat.community</a>.  
-Web server hosted using <a href="https://vrchat.community">expressjs</a>. 
+Web server hosted using <a href="https://expressjs.com/">expressjs</a>. 
