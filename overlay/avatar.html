@@ -1,6 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!DOCTYPE html>
-    <html lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VRCOverlay</title>
@@ -9,14 +9,12 @@
 </head>
 
 <body class="trasparent-bg">
-    <div id="box" class="box m-6">
-        <div class="columns">
-            <div class="column is-one-third">
-                <figure class="image is-4by3">
-                    <img id="avatar-pfp" class="radius-pfp" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images" alt="default robot">
-                </figure>
+    <div id="box" class="box">
+        <div class="overlay-card">
+            <div class="pfp-container">
+                <img id="avatar-pfp" class="radius-pfp" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images" alt="default robot">
             </div>
-            <div class="column">
+            <div class="info-container">
                 <h3 class="title">
                     <span id="avatar-name">Loading... </span>
                     <span id="avatar-rating" class="tag is-dark is-medium">Loading...</span>
@@ -31,3 +29,4 @@
     </div>
     <script src="avatar.js"></script>
 </body>
+</html>

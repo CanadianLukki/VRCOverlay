@@ -2,13 +2,50 @@ html, body {
     background-color: transparent;
     background: transparent;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-#box{
+#box {
     position: relative;
+    width: 600px;
+    height: 180px;
+    box-sizing: border-box;
+    padding: 19px;
+    margin: 20px 0 20px 20px;
+    border-radius: 30px;
 }
 
-#watermark{
+.overlay-card {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.pfp-container {
+    width: 180px;
+    height: 135px;
+    flex-shrink: 0;
+}
+
+#avatar-pfp {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.info-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#watermark {
     position: absolute;
     bottom: 15px;
     right: 15px;
@@ -19,32 +56,13 @@ html, body {
     border: 3px solid #ffffff;
 }
 
-.avi-excellent {
-    background-color: #2f853c;
-    color: white;
-}
+.avi-excellent { background-color: #2f853c; color: white; }
+.avi-good { background-color: rgb(93, 148, 25); color: white; }
+.avi-medium { background-color: #857c2f; color: white; }
+.avi-poor { background-color: #853a2f; color: white; }
+.avi-reallyPoor { background-color: #921c1c; color: white; }
 
-.avi-good {
-    background-color: rgb(93, 148, 25);
-    color: white;
-}
-
-.avi-medium {
-    background-color: #857c2f;
-    color: white;
-}
-
-.avi-poor {
-    background-color: #853a2f;
-    color: white;
-}
-
-.avi-reallyPoor {
-    background-color: #921c1c;
-    color: white;
-}
-
-.private-tag{
+.private-tag {
     background-color: #5d1111;
     color: white;
 }
