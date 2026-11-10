@@ -15,7 +15,7 @@ async function updateAviOverlay() {
     OVRL_RATING.textContent = data.avatarRating;
     OVRL_PFP.src = data.avatarImgUrl;
 
-    OVRL_AUTHOR.classList.remove('is-hidden')
+    OVRL_AUTHOR.classList.remove('is-hidden');
     if (data.showAuthorOnPrivate === false && data.releaseStatus === 'private') {
         OVRL_AUTHOR.classList.add('is-hidden');
     } else {

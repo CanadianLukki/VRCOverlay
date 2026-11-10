@@ -17,6 +17,7 @@
     "keyv": "^5.6.0",
     "keyv-file": "^5.3.3",
     "prompt-sync": "^4.2.0",
+    "typescript": "^7.0.2",
     "vrchat": "^2.22.9"
   },
   "devDependencies": {

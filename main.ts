@@ -20,6 +20,7 @@ let currentAvatarData = {
   avatarName: "Loading...",
   avatarAuthor: "Loading...",
   avatarRating: "Loading...",
+  showArtworkAvatar: true,
   avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images",
   showAuthorOnPrivate: true,
   releaseStatus: ""
@@ -31,6 +32,7 @@ let currentWorldData = {
   worldAndroid: "false",
   worldWindows: "false",
   worldIos: "false",
+  showArtworkWorld: true,
   worldImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
 }
 
@@ -135,6 +137,7 @@ while (true) {
       avatarAuthor: `${API_AVTR_INFO.data?.authorName}`,
       avatarRating: `${API_AVTR_INFO.data?.performance.standalonewindows}`,
       avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`,
+      showArtworkAvatar: config.showArtworkAvatar,
       showAuthorOnPrivate: config.showAuthorOnPrivate,
       releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`
     };
@@ -145,8 +148,9 @@ while (true) {
       worldAndroid: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'android')}`,
       worldWindows: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`,
       worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
+      showArtworkWorld: config.showArtworkWorld,
       worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
-    }
+    };
 
     await console.clear()
     console.log(`Logged in as: ${API_USER.data.displayName}\n`);

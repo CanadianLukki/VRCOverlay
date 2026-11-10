@@ -43,12 +43,14 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    -webkit-text-stroke: 1.2px black;
 }
 
 #watermark {
     position: absolute;
     bottom: 15px;
     right: 15px;
+    -webkit-text-stroke: 0px;
 }
 
 .radius-pfp {
@@ -56,13 +58,14 @@ html, body {
     border: 3px solid #ffffff;
 }
 
-.avi-excellent { background-color: #2f853c; color: white; }
-.avi-good { background-color: rgb(93, 148, 25); color: white; }
-.avi-medium { background-color: #857c2f; color: white; }
-.avi-poor { background-color: #853a2f; color: white; }
-.avi-reallyPoor { background-color: #921c1c; color: white; }
+.avi-excellent { background-color: #2f853c; color: white; -webkit-text-stroke: 0px;}
+.avi-good { background-color: rgb(93, 148, 25); color: white; -webkit-text-stroke: 0px;}
+.avi-medium { background-color: #857c2f; color: white; -webkit-text-stroke: 0px;}
+.avi-poor { background-color: #853a2f; color: white; -webkit-text-stroke: 0px;}
+.avi-reallyPoor { background-color: #921c1c; color: white; -webkit-text-stroke: 0px;}
 
 .private-tag {
     background-color: #5d1111;
     color: white;
+    -webkit-text-stroke: 0px;
 }
