@@ -2,16 +2,55 @@ html, body {
     background-color: transparent;
     background: transparent;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-#box{
+#box {
     position: relative;
+    width: 600px;
+    height: 180px;
+    box-sizing: border-box;
+    padding: 19px;
+    margin: 20px 0 20px 20px;
+    border-radius: 30px;
 }
 
-#watermark{
+.overlay-card {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#pfp-container {
+    width: 180px;
+    height: 135px;
+    flex-shrink: 0;
+}
+
+#world-pfp {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.info-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    -webkit-text-stroke: 1.2px black;
+}
+
+#watermark {
     position: absolute;
     bottom: 15px;
     right: 15px;
+    -webkit-text-stroke: 0px;
 }
 
 .radius-pfp {
@@ -19,14 +58,14 @@ html, body {
     border: 3px solid #ffffff;
 }
 
-#pcTag{
+#pcTag {
     background-color: rgb(0, 81, 194);
 }
 
-#androidTag{
+#androidTag {
     background-color: rgb(0, 142, 0);
 }
 
-#iosTag{
+#iosTag {
     background-color: #7b7b7b;
 }

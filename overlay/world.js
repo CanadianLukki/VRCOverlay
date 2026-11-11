@@ -1,4 +1,5 @@
 const OVRL_PFP = document.getElementById('world-pfp');
+const OVRL_PFP_CONTAINER = document.getElementById('pfp-container');
 const OVRL_NAME = document.getElementById('world-name');
 const OVRL_PC_TAG = document.getElementById('pcTag');
 const OVRL_ANDROID_TAG = document.getElementById('androidTag');
@@ -12,6 +13,12 @@ async function updateWorldOverlay(){
     OVRL_NAME.textContent = data.worldName;
     OVRL_AUTHOR.textContent = `By ${data.worldAuthor}`;
     OVRL_PFP.src = data.worldImgUrl;
+
+    if (data.showArtworkWorld === false) {
+        OVRL_PFP_CONTAINER.classList.add('is-hidden');
+    } else {
+        OVRL_PFP_CONTAINER.classList.remove('is-hidden');
+    }
 
     if(OVRL_NAME.textContent == 'undefined'){
         OVRL_NAME.textContent = 'Not in a world...'

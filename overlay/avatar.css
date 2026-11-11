@@ -25,7 +25,7 @@ html, body {
     height: 100%;
 }
 
-.pfp-container {
+#pfp-container {
     width: 180px;
     height: 135px;
     flex-shrink: 0;

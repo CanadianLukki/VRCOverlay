@@ -161,10 +161,10 @@ while (true) {
     console.log("============================================================\n");
     console.log(`Currently wearing: ${API_AVTR_INFO.data?.name} by ${API_AVTR_INFO.data?.authorName}.`);
     console.log(`Avatar rating: ${API_AVTR_INFO.data?.performance.standalonewindows}`);
-    console.log(`Release status: ${API_AVTR_INFO.data?.releaseStatus}`)
-    console.log(`Show author on private: ${config.showAuthorOnPrivate}\n`);
-    console.log(`Show artwork for avatars: ${config.showArtworkAvatar}\n`);
-    console.log(`Show artwork for worlds: ${config.showArtworkWorld}\n`);
+    console.log(`Release status: ${API_AVTR_INFO.data?.releaseStatus}\n`)
+    console.log(`Show author on private: ${config.showAuthorOnPrivate}`);
+    console.log(`Show artwork for avatars: ${config.showArtworkAvatar}`);
+    console.log(`Show artwork for worlds: ${config.showArtworkWorld}`);
     console.log("------------------------------------------------------\n");
     if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
       console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
