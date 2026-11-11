@@ -1,3 +1,5 @@
 {
-    "showAuthorOnPrivate": true
+    "showAuthorOnPrivate": true,
+    "showArtworkAvatar": true,
+    "showArtworkWorld": true
 }
