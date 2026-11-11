@@ -8,6 +8,7 @@ html, body {
 
 #box {
     position: relative;
+    background-color: var(--overlay-background-color, rgb(21, 23, 26));
     width: 600px;
     height: 180px;
     box-sizing: border-box;
@@ -44,13 +45,6 @@ html, body {
     flex-direction: column;
     justify-content: flex-start;
     -webkit-text-stroke: 1.2px black;
-}
-
-#watermark {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    -webkit-text-stroke: 0px;
 }
 
 .radius-pfp {

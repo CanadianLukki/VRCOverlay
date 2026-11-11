@@ -1,5 +1,6 @@
 {
     "showAuthorOnPrivate": true,
     "showArtworkAvatar": true,
-    "showArtworkWorld": true
+    "showArtworkWorld": true,
+    "backgroundColor": [21, 23, 26, 1]
 }

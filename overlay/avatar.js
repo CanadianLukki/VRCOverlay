@@ -11,6 +11,10 @@ async function updateAviOverlay() {
 
     console.log(data);
 
+    document.documentElement.style.setProperty(
+        '--overlay-background-color',
+        `rgba(${data.backgroundColor.join(', ')})`
+    );
     OVRL_NAME.textContent = data.avatarName;
     OVRL_AUTHOR.textContent = `By ${data.avatarAuthor}`;
     OVRL_RATING.textContent = data.avatarRating;

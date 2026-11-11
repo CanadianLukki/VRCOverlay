@@ -12,6 +12,37 @@ const web = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const config = require(path.join(process.cwd(), 'config.json'));
+type RgbaColor = [number, number, number, number];
+
+function parseRgbaColor(value: unknown): RgbaColor {
+  if (
+    !Array.isArray(value)
+    || value.length !== 4
+    || !value.every(channel => typeof channel === 'number' && Number.isFinite(channel))
+  ) {
+    console.error('Invalid config.json backgroundColor: expected [red, green, blue, opacity].');
+    prompt('Press any key to exit...');
+    process.exit(1);
+  }
+
+  const [red, green, blue, opacity] = value;
+  if (
+    !Number.isInteger(red) || red < 0 || red > 255
+    || !Number.isInteger(green) || green < 0 || green > 255
+    || !Number.isInteger(blue) || blue < 0 || blue > 255
+    || opacity < 0 || opacity > 1
+  ) {
+    console.error('Invalid config.json backgroundColor: RGB channels must be integers from 0 to 255 and opacity must be from 0 to 1.');
+    prompt('Press any key to exit...');
+    process.exit(1);
+  }
+
+  return [red, green, blue, opacity];
+}
+
+const backgroundColor: RgbaColor = config.backgroundColor === undefined
+  ? [21, 23, 26, 1]
+  : parseRgbaColor(config.backgroundColor);
 const creds = new KeyvFile({
   filename: `${process.cwd()}/credentials.json`
 })
@@ -23,7 +54,8 @@ let currentAvatarData = {
   showArtworkAvatar: true,
   avatarImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images",
   showAuthorOnPrivate: true,
-  releaseStatus: ""
+  releaseStatus: "",
+  backgroundColor
 }
 
 let currentWorldData = {
@@ -33,7 +65,8 @@ let currentWorldData = {
   worldWindows: "false",
   worldIos: "false",
   showArtworkWorld: true,
-  worldImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images"
+  worldImgUrl: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%2Fid%2FOIP.QU1p_P68Rtu39zJg0TXDKgHaFj%3Fpid%3DApi&f=1&ipt=10d1045ca09161cd432b3c20ef277c1ebc443c1f5f548bf0bf6cbeeb39df2da1&ipo=images",
+  backgroundColor
 }
 
 async function authVRChat() {
@@ -139,7 +172,8 @@ while (true) {
       avatarImgUrl: `${API_AVTR_INFO.data?.thumbnailImageUrl}`,
       showArtworkAvatar: config.showArtworkAvatar,
       showAuthorOnPrivate: config.showAuthorOnPrivate,
-      releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`
+      releaseStatus: `${API_AVTR_INFO.data?.releaseStatus}`,
+      backgroundColor
     };
 
     currentWorldData = {
@@ -149,7 +183,8 @@ while (true) {
       worldWindows: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'standalonewindows')}`,
       worldIos: `${API_WORLD_INFO.data?.unityPackages?.some(data => data.platform === 'ios')}`,
       showArtworkWorld: config.showArtworkWorld,
-      worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`
+      worldImgUrl: `${API_WORLD_INFO.data?.imageUrl}`,
+      backgroundColor
     };
 
     await console.clear()
@@ -165,6 +200,7 @@ while (true) {
     console.log(`Show author on private: ${config.showAuthorOnPrivate}`);
     console.log(`Show artwork for avatars: ${config.showArtworkAvatar}`);
     console.log(`Show artwork for worlds: ${config.showArtworkWorld}`);
+    console.log(`Background color: ${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]}, ${backgroundColor[3]}\n`);
     console.log("------------------------------------------------------\n");
     if (API_WORLD_INFO.data?.name != undefined && API_WORLD_INFO.data?.authorName != undefined) {
       console.log(`Current world is ${API_WORLD_INFO.data?.name} by ${API_WORLD_INFO.data?.authorName}.`);
@@ -183,6 +219,7 @@ while (true) {
       await unlink(`${process.cwd()}/credentials.json`);
       credsfileDeleted = true
     }
+    prompt('Press any key to exit...');
   }
   await setTimeout(10000);
 }

@@ -10,6 +10,10 @@ async function updateWorldOverlay(){
     const response = await fetch('currentWorldData');
     const data = await response.json();
 
+    document.documentElement.style.setProperty(
+        '--overlay-background-color',
+        `rgba(${data.backgroundColor.join(', ')})`
+    );
     OVRL_NAME.textContent = data.worldName;
     OVRL_AUTHOR.textContent = `By ${data.worldAuthor}`;
     OVRL_PFP.src = data.worldImgUrl;

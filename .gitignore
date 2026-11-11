@@ -2,3 +2,4 @@ node_modules/
 credentials.json
 dist/
 main.js.map
+.DS_Store
